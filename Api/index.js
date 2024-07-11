@@ -3,9 +3,16 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const app = express();
 dotenv.config();
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
+
 app.use(express.json())
+app.use(cookieParser())
+app.use(cors());
 
 const authRoute = require('./routes/authRoute')
+const enrollRoute = require('./routes/enrollRoute')
+const userRoutes = require('./routes/userRoute')
 
 const DB = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSWORD);
 
@@ -20,14 +27,16 @@ mongoose
     console.log(err);
   });
 
+const Port = 5000
 
-
-app.listen(3000, () => {
-  console.log("server is running");
+app.listen(Port , () => {
+  console.log(`server is running in ${Port}`);
 });
 
 
 app.use('/apisd/auth', authRoute )
+app.use('/apisd/enroll',enrollRoute)
+app.use('/apisd/user', userRoutes )
 
 
 app.use((err,req,res,next) => {
